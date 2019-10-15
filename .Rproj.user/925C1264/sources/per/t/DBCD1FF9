@@ -1,0 +1,26 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1570961422151.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1307520894",
+    "id" : "DBCD1FF9",
+    "lastKnownWriteTime" : 1570961481,
+    "last_content_update" : 1570961481417,
+    "path" : "C:/Users/juraj/git_hub/pretestR/R/with_minimal.R",
+    "project_path" : "R/with_minimal.R",
+    "properties" : {
+        "cursorPosition" : "15,0",
+        "scrollLine" : "0",
+        "tempName" : "Untitled1"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

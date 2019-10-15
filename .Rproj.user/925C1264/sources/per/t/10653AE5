@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1570917447985.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2181751680",
+    "id" : "10653AE5",
+    "lastKnownWriteTime" : 1570918088,
+    "last_content_update" : 1570918088908,
+    "path" : "C:/Users/juraj/git_hub/pretestR/R/partial.R",
+    "project_path" : "R/partial.R",
+    "properties" : {
+        "cursorPosition" : "50,30",
+        "scrollLine" : "0"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
