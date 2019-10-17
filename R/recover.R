@@ -33,12 +33,12 @@
 #'  return(x)
 #'  }
 #'
-#'  blackbox(fun = dummy_fun, args = list(x = 5))
+#'  recover(fun = dummy_fun, args = list(x = 5))
 #'  # this also works with arguments unspecified
-#'  blackbox(fun = dummy_fun)
+#'  recover(fun = dummy_fun)
 #'  # and it will try to be helpful, though it is recommended to specify args where possible
 #'
-#'  # finally, blackbox can also return functions
+#'  # finally, recover can also return functions
 #'
 #' dummy_fun <- function( x )
 #'  {
@@ -50,7 +50,7 @@
 #'  return(x)
 #'  }
 #'
-#'  blackbox(fun = dummy_fun)
+#'  recover(fun = dummy_fun)
 #'
 #'
 
@@ -59,7 +59,7 @@
 
 
 
-blackbox <- function( fun,
+recover <- function( fun,
                       args,
                       return.all = TRUE )
 {
@@ -78,7 +78,7 @@ res <- as.numeric(
     tryCatch(
       for (i in 1:length(body(fun)))
       {
-        partial_eval( fun, args, eval.point = i)
+        partial( fun, args, eval.point = i)
         iter_death <- i
       },
       error = function(e){ return(iter_death)}
@@ -92,7 +92,7 @@ if(length(res) == 0){
 
 if(return.all == TRUE)
 {
-  result <- list(body(fun)[[res]], partial_eval(fun, args, eval.point = iter_death))
+  result <- list(body(fun)[[res]], partial(fun, args, eval.point = iter_death))
   names(result) <- c("Failing line", "Objects in scope")
 
 }

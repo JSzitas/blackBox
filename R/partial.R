@@ -29,29 +29,35 @@
 #' }
 #'
 #' # works with function body line number
-#' partial_eval( fun = dummy_function,
-#'               args = list(x = 10,z = FALSE, b = FALSE),
-#'               eval.point = 1 )
-#' partial_eval( fun = dummy_function,
-#'               args = list(x = 10,z = FALSE, b = FALSE),
-#'               eval.point = 3 )
+#' partial( fun = dummy_function,
+#'          args = list(x = 10,z = FALSE, b = FALSE),
+#'          eval.point = 1 )
+#' partial( fun = dummy_function,
+#'          args = list(x = 10,z = FALSE, b = FALSE),
+#'          eval.point = 3 )
 #'
 #' # works with partial string matching
-#' partial_eval( fun = dummy_function,
-#'               args = list(x = 10,z = FALSE, b = FALSE),
-#'               eval.point = "negat" )
+#' partial( fun = dummy_function,
+#'          args = list(x = 10,z = FALSE, b = FALSE),
+#'          eval.point = "negat" )
 #' # and semi-full string matching
-#' partial_eval( fun = dummy_function,
-#'               args = list(x = 10,z = FALSE, b = FALSE),
-#'               eval.point = "negative <- " )
+#' partial( fun = dummy_function,
+#'          args = list(x = 10,z = FALSE, b = FALSE),
+#'          eval.point = "negative <- " )
 #'
 
 
 
-partial_eval <- function( fun,
+partial <- function( fun,
                           args,
                           eval.point )
 {
+  if(missing(args)){
+    fill_args <- gsub(x = head(fun)[[1]], pattern = "function|\\(|\\)", replacement = "")
+    fill_args <- strsplit( fill_args, split = ",")
+
+    args <- list(fill_args)
+  }
   if(is.null(eval.point))
   {
     stop("Please supply an evaluation point for me to return.")

@@ -1,4 +1,4 @@
 library(testthat)
-library(pretestR)
+library(recovery)
 
-test_check("pretestR")
+test_check("recovery")
