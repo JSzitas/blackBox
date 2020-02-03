@@ -7,12 +7,16 @@
 #' @param args A list of the arguments necessary for the function to execute. See details.
 #' @param eval.point The function line from which to return the result. A line number in the
 #' body of the function, or a character string quoting a part of the function. See details.
+#' @param full.scope Whether to return everything that was in scope at the partial evaluation
+#' point, defaults to **FALSE**.
 #' @details Parameter **args** can be safely ignored for
 #' functions which take no arguments explicitly, or for functions that have all their arguments
 #' set. **eval.point** stands for the line in the function body to be replaced with a return -
 #' this line is temporarily overwritten so a return can be made from it. See examples for usage.
 #' @note If regex matching fails and your expression does not evaluate to anything valid,
 #' please try shortening it or supplying a different part of it.
+#' @return A result of partial evaluations - the full environment containing every object
+#' in scope at that evaluation if **full.scope** is **TRUE**, the last **call** otherwise.
 #'
 #' @export
 #' @examples
@@ -49,8 +53,9 @@
 
 
 partial <- function( fun,
-                          args,
-                          eval.point )
+                     args,
+                     eval.point,
+                     full.scope = FALSE )
 {
   if(missing(args)){
     fill_args <- gsub(x = head(fun)[[1]], pattern = "function|\\(|\\)", replacement = "")
@@ -76,9 +81,6 @@ partial <- function( fun,
     # fix the brackets (which would normally fail due to regex matching)
     eval.point <- gsub(pattern = "\\(", replacement = "\\\\(", x = eval.point)
     eval.point <- gsub(pattern = "\\)", replacement = "\\\\)", x = eval.point)
-#    eval.point <- gsub(pattern = "\\-", replacement = "\\\\-", x = eval.point)
-  #  eval.point <- gsub(pattern = "\\)", replacement = "\\\\)", x = eval.point)
-
 
     # defined as a character string inside the body of the function
     new_return <- as.numeric(grep( pattern = eval.point, x = as.character( body( fun ) ) ))
@@ -99,11 +101,21 @@ partial <- function( fun,
          body of the function.")
   }
 
+  if(full.scope){
 
-  body(fun)[[new_return]] <- substitute( return(as.list(environment())))
-  fun_abbr <- fun
+    body(fun)[[new_return]] <- substitute( return(as.list(environment())))
+    fun_abbr <- fun
 
-   result <- do.call(fun_abbr, args)
+    result <- do.call(fun_abbr, args)
+  }
+  else{
+    last_obj <- as.character(body(fun)[[new_return]])[2]
+    body(fun)[[new_return+1]] <- substitute( return(eval(parse(text = last_obj))))
+
+    fun_abbr <- fun
+    result <- do.call(fun_abbr, args)
+  }
+
   return(result)
 }
 

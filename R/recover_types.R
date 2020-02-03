@@ -71,7 +71,7 @@ tryCatch(
   }
 
 
-    get_objects <- partial(fun, args, eval.point = iter_death)
+    get_objects <- partial(fun, args, eval.point = iter_death, full.scope = TRUE)
     classes_get <- lapply(get_objects, FUN = class)
     names(classes_get) <- names(get_objects)
     result <- list(body(fun)[[res]], classes_get)

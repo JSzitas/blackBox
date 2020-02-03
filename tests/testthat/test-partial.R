@@ -8,7 +8,8 @@ test_that("Test that running a function for partial returns works", {
       return(x)
     }
 
-    test_res <- partial(dummy_fun, args = list(x = 2, y = "death", z = 5), eval.point = 2)
+    test_res <- partial(dummy_fun, args = list(x = 2, y = "death", z = 5), eval.point = 2,
+                        full.scope = TRUE )
 
     expect_equal(test_res$y,"death")
     expect_equal(test_res$z, 5)
@@ -16,7 +17,8 @@ test_that("Test that running a function for partial returns works", {
 
 
 
-    test_no_args <- partial(dummy_fun, eval.point = 2)
+    test_no_args <- partial(dummy_fun, eval.point = 2,
+                            full.scope = TRUE)
     expect_equal(test_no_args$y, test_res$y)
     expect_equal(test_no_args$z, test_res$z)
     expect_equal(test_no_args$x, list(c(" x = 2", " y = \"death\"", " z = 5 ")))

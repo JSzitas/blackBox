@@ -11,7 +11,7 @@ test_that("Recovering from a function works", {
   test_res <- recover(dummy_fun)
 
   expect_equal(names(test_res), c("Failing line", "Objects in scope"))
-  expect_equal(as.character(test_res$'Failing line'), c("<-","x","x + 5"))
+  expect_equal(as.character(test_res$'Failing line'), c("{"))
   expect_equal(test_res$`Objects in scope`$x, list(c(" x = 2"," y = \"death\"", " z = 5 ")))
   expect_equal(test_res$`Objects in scope`$y, "death")
   expect_equal(test_res$`Objects in scope`$z, 5)
@@ -27,7 +27,7 @@ test_that( "This works even in parallel",{
 
   skip_on_cran()
   skip_on_travis()
-  library(doFuture)
+  suppressWarnings( library(doFuture))
   registerDoFuture()
   plan(multiprocess)
 
@@ -41,6 +41,7 @@ test_that( "This works even in parallel",{
     }
     res <-  foreach(i = 1:length.out ) %dopar%
       {
+        # if you dont assign here the test fails
         weirdness <- magical(x,y,z)
       }
     return(res)
@@ -56,14 +57,8 @@ test_that( "This works even in parallel",{
 
   # returns the wrong line, ie
   expect_equal(as.character(test_res$'Failing line'),
-               c( "<-","res",
-                  "foreach(i = 1:length.out) %dopar% {\n    weirdness <- magical(x, y, z)\n}"))
-  expect_equal(test_res$'Objects in scope'$magical, function(x,y,z){
-    x <- x + 5
-    z <- 12
-    x <- y + z
-    return(x)
-  })
+               c( "<-","magical",
+   "function(x, y, z) {\n    x <- x + 5\n    z <- 12\n    x <- y + z\n    return(x)\n}"))
   expect_equal(test_res$'Objects in scope'$x, 5)
   expect_equal(test_res$'Objects in scope'$y, "fly")
   expect_equal(test_res$'Objects in scope'$z , 2)

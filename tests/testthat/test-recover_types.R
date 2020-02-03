@@ -11,7 +11,7 @@ test_that("Type recovery works", {
   test_res <- recover_types(dummy_fun)
 
     expect_equal(names(test_res), c("Failing line", "Types"))
-    expect_equal(as.character(test_res$'Failing line'), c("<-","x","x + 5"))
+    expect_equal(as.character(test_res$'Failing line'), c("{"))
     expect_equal(test_res$Types$x, "list")
     expect_equal(test_res$Types$y, "character")
     expect_equal(test_res$Types$z, "numeric")
@@ -25,7 +25,7 @@ test_that( "This works even in parallel",{
 
   skip_on_cran()
   skip_on_travis()
-  library(doFuture)
+  suppressWarnings( library(doFuture) )
   registerDoFuture()
   plan(multiprocess)
 
@@ -54,8 +54,8 @@ test_res <- recover_types( parallel_fun,
 
   # returns the wrong line, ie
   expect_equal(as.character(test_res$'Failing line'),
-        c( "<-","res",
-           "foreach(i = 1:length.out) %dopar% {\n    weirdness <- magical(x, y, z)\n}"))
+        c( "<-","magical",
+  "function(x, y, z) {\n    x <- x + 5\n    z <- 12\n    x <- y + z\n    return(x)\n}"))
   expect_equal(test_res$Types$x, "numeric")
   expect_equal(test_res$Types$y, "character")
   expect_equal(test_res$Types$z, "numeric")

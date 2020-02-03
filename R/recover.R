@@ -92,7 +92,8 @@ if(length(res) == 0){
 
 if(return.all == TRUE)
 {
-  result <- list(body(fun)[[res]], partial(fun, args, eval.point = iter_death))
+  result <- list(body(fun)[[res]], partial( fun, args, eval.point = iter_death,
+                                            full.scope = TRUE))
   names(result) <- c("Failing line", "Objects in scope")
 
 }

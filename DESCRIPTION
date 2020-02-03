@@ -1,15 +1,23 @@
 Package: recovery
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Recover From Failures and Perform Partial Tests
 Version: 0.9.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Authors@R: 
+    person(given = "Juraj",
+           family = "Szitas",
+           role = c("aut", "cre"),
+           email = "szitas.juraj13@gmail.com")
+BugReports: https://github.com/JSzitas/recovery/issues          
+Description: Recover objects in scope inside a function - at any point during
+    the execution of the function. This includes particularly the objects 
+    created during the execution of the function. Also supports partial tests - 
+    whether a function returns the correct object at a given point during 
+    execution. 
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Suggests: 
     testthat (>= 2.1.0),
-    doFuture
+    doFuture,
+    covr
 RoxygenNote: 6.1.1
