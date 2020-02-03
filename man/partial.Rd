@@ -4,7 +4,8 @@
 \alias{partial}
 \title{Partially evaluation of a function}
 \usage{
-partial(fun, args, eval.point)
+partial(fun, args, eval.point = NULL, full.scope = FALSE,
+  fix.pattern = FALSE)
 }
 \arguments{
 \item{fun}{A function to partially evaluate.}
@@ -13,6 +14,15 @@ partial(fun, args, eval.point)
 
 \item{eval.point}{The function line from which to return the result. A line number in the
 body of the function, or a character string quoting a part of the function. See details.}
+
+\item{full.scope}{Whether to return everything that was in scope at the partial evaluation
+point, defaults to **FALSE**.}
+
+\item{fix.pattern}{Whether to used **fixed** for regex matching, defaults to **FALSE**.}
+}
+\value{
+A result of partial evaluations - the full environment containing every object
+in scope at that evaluation if **full.scope** is **TRUE**, the last **call** otherwise.
 }
 \description{
 Partially evaluates a function, returning only the objects which exist

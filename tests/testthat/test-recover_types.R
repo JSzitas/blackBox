@@ -11,10 +11,15 @@ test_that("Type recovery works", {
   test_res <- recover_types(dummy_fun)
 
     expect_equal(names(test_res), c("Failing line", "Types"))
-    expect_equal(as.character(test_res$'Failing line'), c("{"))
-    expect_equal(test_res$Types$x, "list")
+    expect_equal(as.character(test_res$'Failing line'), c("<-", "x", "y + 5"))
+    expect_equal(test_res$Types$x, "numeric")
     expect_equal(test_res$Types$y, "character")
     expect_equal(test_res$Types$z, "numeric")
+
+  test_res <- recover_types(dummy_fun, args = list(2,2,2))
+
+  expect_equal(test_res, 0)
+
 
 
 
@@ -54,12 +59,16 @@ test_res <- recover_types( parallel_fun,
 
   # returns the wrong line, ie
   expect_equal(as.character(test_res$'Failing line'),
-        c( "<-","magical",
-  "function(x, y, z) {\n    x <- x + 5\n    z <- 12\n    x <- y + z\n    return(x)\n}"))
+        c( "<-","res",
+           "foreach(i = 1:length.out) %dopar% {\n    weirdness <- magical(x, y, z)\n}"))
+  # it would be nice if we could recurse on this...
+
   expect_equal(test_res$Types$x, "numeric")
   expect_equal(test_res$Types$y, "character")
   expect_equal(test_res$Types$z, "numeric")
   expect_equal(test_res$Types$length.out, "numeric")
+
+
 
 
 

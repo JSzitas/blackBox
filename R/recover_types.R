@@ -19,7 +19,7 @@
 #' @export
 #' @examples
 #'
-#'  dummy_fun <- function( x,
+#'  dummy_fun <- function( x = 2,
 #'                         y = "this_crashes",
 #'                         z = 2 )
 #'  {
@@ -43,17 +43,25 @@
 
 
 recover_types <- function( fun, args ){
-if(is.character(fun))
-  {
-  fun <- eval(as.name(fun))
-  }
+    if(is.character(fun))
+      {
+        fun <- eval(as.name(fun))
+      }
     if(missing(args)){
       fill_args <- gsub(x = head(fun)[[1]], pattern = "function|\\(|\\)", replacement = "")
       fill_args <- strsplit( fill_args, split = ",")
 
-      args <- list(fill_args)
+      split_names_values <- lapply(fill_args, function(i){
+        strsplit(i, split = "=", fixed = TRUE)
+      })
+      RHS <- lapply(split_names_values[[1]], function(i){
+        eval(parse(text = i[[2]]))
+      })
+
+      args <- RHS
     }
     # get the line on which it fails
+# return(args)
 res <- as.numeric(
 tryCatch(
   for (i in 1:length(body(fun)))
@@ -61,7 +69,7 @@ tryCatch(
       partial( fun, args, eval.point = i)
       iter_death <- i
     },
-      error = function(e){ return(iter_death)}
+      error = function(e){ return(iter_death+1)}
     ))
 
   if(length(res) == 0){
@@ -71,7 +79,7 @@ tryCatch(
   }
 
 
-    get_objects <- partial(fun, args, eval.point = iter_death, full.scope = TRUE)
+    get_objects <- partial(fun, args, eval.point = res, full.scope = TRUE)
     classes_get <- lapply(get_objects, FUN = class)
     names(classes_get) <- names(get_objects)
     result <- list(body(fun)[[res]], classes_get)

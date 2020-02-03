@@ -9,6 +9,7 @@
 #' body of the function, or a character string quoting a part of the function. See details.
 #' @param full.scope Whether to return everything that was in scope at the partial evaluation
 #' point, defaults to **FALSE**.
+#' @param fix.pattern Whether to used **fixed** for regex matching, defaults to **FALSE**.
 #' @details Parameter **args** can be safely ignored for
 #' functions which take no arguments explicitly, or for functions that have all their arguments
 #' set. **eval.point** stands for the line in the function body to be replaced with a return -
@@ -54,8 +55,9 @@
 
 partial <- function( fun,
                      args,
-                     eval.point,
-                     full.scope = FALSE )
+                     eval.point = NULL,
+                     full.scope = FALSE,
+                     fix.pattern = FALSE )
 {
   if(missing(args)){
     fill_args <- gsub(x = head(fun)[[1]], pattern = "function|\\(|\\)", replacement = "")
@@ -70,8 +72,8 @@ partial <- function( fun,
   if(is.numeric(eval.point) && eval.point != 0)
   {
     # use the line in the body of the function as the evaluation point
-    if(length(eval.point) == 0){
-      stop("Not a valid evaluation point, stopping.")
+    if( eval.point < 0){
+      stop("Not a valid evaluation point, stopping. Please supply a positive integer.")
     }
     new_return <- eval.point
 
@@ -83,7 +85,9 @@ partial <- function( fun,
     eval.point <- gsub(pattern = "\\)", replacement = "\\\\)", x = eval.point)
 
     # defined as a character string inside the body of the function
-    new_return <- as.numeric(grep( pattern = eval.point, x = as.character( body( fun ) ) ))
+    new_return <- as.numeric(grep( pattern = eval.point,
+                                   x = as.character(body(fun)),
+                                   fixed = fix.pattern))
     if(length(new_return) == 0){
       stop("Not a valid evaluation point, stopping.")
     }

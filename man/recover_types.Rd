@@ -30,7 +30,7 @@ less verbose and heavy version of recovery
 }
 \examples{
 
- dummy_fun <- function( x,
+ dummy_fun <- function( x = 2,
                         y = "this_crashes",
                         z = 2 )
  {

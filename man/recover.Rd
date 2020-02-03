@@ -2,7 +2,7 @@
 % Please edit documentation in R/recover.R
 \name{recover}
 \alias{recover}
-\title{Recover the black box of a function that dies.}
+\title{Recover the scope of a function that dies.}
 \usage{
 recover(fun, args, return.all = TRUE)
 }
@@ -13,11 +13,13 @@ as a character string.}
 \item{args}{A list of optional function arguments to evaluate the function with.}
 
 \item{return.all}{Whether to return all of the objects in the environment, or to only
-return the last function called.}
+print the last function called (which failed).}
 }
 \value{
 A list with the line caused the function to crash, and optionally the list of all
-objects in scope when the crash happened. Alternatively 0 if the function ran succesfully.
+objects in scope when the crash happened. Alternatively print the failing line and return 1
+ if **return.all** is set to **FALSE**. Return 0 if the function ran
+succesfully (and print a message).
 }
 \description{
 Allows error recovery with specific lines and functions.
@@ -33,7 +35,7 @@ the whole scenario and find the error message faster.
 }
 \examples{
 
- dummy_fun <- function( x,
+ dummy_fun <- function( x = 2,
                         y = "this_crashes",
                         z = 2 )
  {
@@ -46,13 +48,13 @@ the whole scenario and find the error message faster.
  }
 
  recover(fun = dummy_fun, args = list(x = 5))
- # this also works with arguments unspecified
+ # this also works with arguments unspecified (but they must have set defaults)
  recover(fun = dummy_fun)
  # and it will try to be helpful, though it is recommended to specify args where possible
 
  # finally, recover can also return functions
 
-dummy_fun <- function( x )
+dummy_fun <- function( x = 2 )
  {
  x = x + 2
  z = x + 3
