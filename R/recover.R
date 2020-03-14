@@ -99,6 +99,25 @@ if(length(res) == 0){
   return(0)
 }
 
+if( substr(body(fun)[[res]],start = 1, stop = 10)[1] == "if"){
+
+  helper_fun <- as.function(list( body(fun)[[res]][3]))
+
+  get_args <- partial( fun, args, eval.point = res,
+                       full.scope = TRUE)
+
+  formals(helper_fun) <- get_args
+
+  where_fix_brackets <- length(head(helper_fun))
+  to_fix <- head(helper_fun)
+  to_fix[where_fix_brackets] <- "}"
+
+  helper_fun <- eval( parse(text = to_fix))
+
+
+  return(recover(helper_fun, return.all = return.all))
+}
+
 if(return.all == TRUE)
 {
   result <- list(body(fun)[[res]], partial( fun, args, eval.point = res,
@@ -111,6 +130,7 @@ else
   print(body(fun)[[res]])
   return(1)
 }
+
 
 return(result)
 }

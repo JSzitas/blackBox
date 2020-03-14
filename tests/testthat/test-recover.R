@@ -96,5 +96,37 @@ test_that( "This works even in parallel",{
   expect_equal(test_res, 1)
 
 
+})
+
+test_that("Recovering from a conditional inside a function works", {
+  dummy_fun <- function( x = 2, y = "death", z = 5, some_condition = TRUE )
+  {
+    if(some_condition){
+      x <- x + 5
+      z <- 12
+      x <- y + 5
+    }
+    return(x)
+  }
+
+  test_res <- recover(dummy_fun)
+
+  expect_equal(names(test_res), c("Failing line", "Objects in scope"))
+  # It correctly fails here due to addition of "death" + 5 resulting in an error
+  expect_equal(as.character(test_res$'Failing line'), c("<-", "x", "y + 5"))
+  # This gets updated - correctly
+  expect_equal(test_res$`Objects in scope`$x, 7)
+  expect_equal(test_res$`Objects in scope`$y, "death")
+  # This gets updated correctly too
+  expect_equal(test_res$`Objects in scope`$z, 12)
+
+  test_res <- recover( dummy_fun,
+                       args = list( x = 5,
+                                    y ="fly",
+                                    z = 2 ),
+                       return.all = FALSE )
+  expect_equal(test_res, 1)
 
 })
+
+
