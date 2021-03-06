@@ -23,10 +23,8 @@ test_that("Recovering from a function works", {
                        args = list( x = 5,
                                     y ="fly",
                                     z = 2 ),
-                       return.all = FALSE )
-  expect_equal(test_res, 1)
-
-
+                       return_all = FALSE )
+  expect_equal( names(test_res),"Failing line")
 })
 
 test_that( "If the function runs the return is correct",{
@@ -39,8 +37,8 @@ test_that( "If the function runs the return is correct",{
   }
 
   test_res <- recover( dummy_fun,
-                       return.all = FALSE )
-  expect_equal(test_res, 0)
+                       return_all = FALSE )
+  expect_equal(test_res, "The function ran succesfully!")
 
 })
 
@@ -51,7 +49,7 @@ test_that( "This works even in parallel",{
   skip_on_travis()
   suppressWarnings( library(doFuture))
   registerDoFuture()
-  plan(multiprocess)
+  plan(multisession)
 
   parallel_fun <- function(x,y,z, length.out ){
 
@@ -92,10 +90,8 @@ test_that( "This works even in parallel",{
                                     y ="fly",
                                     z = 2,
                                     length.out = 10 ),
-                       return.all = FALSE )
-  expect_equal(test_res, 1)
-
-
+                       return_all = FALSE )
+  expect_equal(names(test_res), "Failing line")
 })
 
 test_that("Recovering from a conditional inside a function works", {
@@ -124,9 +120,8 @@ test_that("Recovering from a conditional inside a function works", {
                        args = list( x = 5,
                                     y ="fly",
                                     z = 2 ),
-                       return.all = FALSE )
-  expect_equal(test_res, 1)
-
+                       return_all = FALSE )
+  expect_equal(names(test_res), "Failing line")
 })
 
 

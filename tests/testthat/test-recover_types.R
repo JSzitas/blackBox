@@ -19,12 +19,7 @@ test_that("Type recovery works", {
   test_res <- recover_types(dummy_fun, args = list(2,2,2))
 
   expect_equal(test_res, 0)
-
-
-
-
 })
-
 
 test_that( "This works even in parallel",{
 
@@ -32,7 +27,7 @@ test_that( "This works even in parallel",{
   skip_on_travis()
   suppressWarnings( library(doFuture) )
   registerDoFuture()
-  plan(multiprocess)
+  plan(multisession)
 
   parallel_fun <- function(x,y,z, length.out ){
 
@@ -67,9 +62,4 @@ test_res <- recover_types( parallel_fun,
   expect_equal(test_res$Types$y, "character")
   expect_equal(test_res$Types$z, "numeric")
   expect_equal(test_res$Types$length.out, "numeric")
-
-
-
-
-
 })

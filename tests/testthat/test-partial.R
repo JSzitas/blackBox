@@ -8,8 +8,8 @@ test_that("Test that running a function for partial returns works", {
       return(x)
     }
 
-    test_res <- partial(dummy_fun, args = list(x = 2, y = "death", z = 5), eval.point = 2,
-                        full.scope = TRUE )
+    test_res <- partial(dummy_fun, args = list(x = 2, y = "death", z = 5), eval_point = 2,
+                        full_scope = TRUE )
 
     expect_equal(test_res$y,"death")
     expect_equal(test_res$z, 5)
@@ -17,17 +17,17 @@ test_that("Test that running a function for partial returns works", {
 
 
 
-    test_no_args <- partial(dummy_fun, eval.point = 2,
-                            full.scope = TRUE)
+    test_no_args <- partial(dummy_fun, eval_point = 2,
+                            full_scope = TRUE)
     expect_equal(test_no_args$y, test_res$y)
     expect_equal(test_no_args$z, test_res$z)
     expect_equal(test_no_args$x, list(c(" x = 2", " y = \"death\"", " z = 5 ")))
 
 
     test_res <- partial(dummy_fun, args = list(x = 2, y = "death", z = 5),
-                        eval.point = "x <- x + 5",
-                        full.scope = TRUE,
-                        fix.pattern = TRUE )
+                        eval_point = "x <- x + 5",
+                        full_scope = TRUE,
+                        fix_pattern = TRUE )
 
     expect_equal(test_res$z, 5)
     expect_equal(test_res$y, "death")
@@ -50,11 +50,11 @@ test_that( "Failures work as expected",{
   expect_error( partial(dummy_fun),
                 "Please supply an evaluation point for me to return.",
                 fixed = TRUE)
-  expect_error( partial(dummy_fun, eval.point = -2),
+  expect_error( partial(dummy_fun, eval_point = -2),
                 "Not a valid evaluation point, stopping. Please supply a positive integer.",
                 fixed = TRUE)
 
-  expect_error(partial(dummy_fun, eval.point = matrix(NA, 10, 10)),
+  expect_error(partial(dummy_fun, eval_point = matrix(NA, 10, 10)),
                "Please supply a valid evaluation point -
          a number indicating the line in the body of the function,
          or a string which can be parsed and matched against the
@@ -62,8 +62,8 @@ test_that( "Failures work as expected",{
                fixed = TRUE )
 
 
-  expect_error( partial( dummy_fun, eval.point = "x <- ",
-                         fix.pattern = FALSE ),
+  expect_error( partial( dummy_fun, eval_point = "x <- ",
+                         fix_pattern = FALSE ),
                 "Multiple evaluation matches - please select an unambiguous one.",
                 fixed = TRUE )
 
