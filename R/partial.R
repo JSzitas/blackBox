@@ -1,23 +1,23 @@
-#' Partially evaluation of a function
+#' Partial evaluation of a function
 #'
 #' @description Partially evaluates a function, returning only the objects which exist
 #'  after the last line of partial evaluation.
 #'
 #' @param fun A function to partially evaluate.
 #' @param args A list of the arguments necessary for the function to execute. See details.
-#' @param eval.point The function line from which to return the result. A line number in the
+#' @param eval_point The function line from which to return the result. A line number in the
 #' body of the function, or a character string quoting a part of the function. See details.
-#' @param full.scope Whether to return everything that was in scope at the partial evaluation
+#' @param full_scope Whether to return everything that was in scope at the partial evaluation
 #' point, defaults to **FALSE**.
-#' @param fix.pattern Whether to used **fixed** for regex matching, defaults to **FALSE**.
+#' @param fix_pattern Whether to used **fixed** for regex matching on **eval_point**, defaults to **FALSE**.
 #' @details Parameter **args** can be safely ignored for
 #' functions which take no arguments explicitly, or for functions that have all their arguments
-#' set. **eval.point** stands for the line in the function body to be replaced with a return -
+#' set. **eval_point** stands for the line in the function body to be replaced with a return -
 #' this line is temporarily overwritten so a return can be made from it. See examples for usage.
 #' @note If regex matching fails and your expression does not evaluate to anything valid,
 #' please try shortening it or supplying a different part of it.
 #' @return A result of partial evaluations - the full environment containing every object
-#' in scope at that evaluation if **full.scope** is **TRUE**, the last **call** otherwise.
+#' in scope at that evaluation if **full_scope** is **TRUE**, the last **call** otherwise.
 #'
 #' @export
 #' @examples
@@ -36,85 +36,94 @@
 #' # works with function body line number
 #' partial( fun = dummy_function,
 #'          args = list(x = 10,z = FALSE, b = FALSE),
-#'          eval.point = 1 )
+#'          eval_point = 1 )
 #' partial( fun = dummy_function,
 #'          args = list(x = 10,z = FALSE, b = FALSE),
-#'          eval.point = 3 )
+#'          eval_point = 3 )
 #'
 #' # works with partial string matching
 #' partial( fun = dummy_function,
 #'          args = list(x = 10,z = FALSE, b = FALSE),
-#'          eval.point = "negat" )
+#'          eval_point = "negat" )
 #' # and semi-full string matching
 #' partial( fun = dummy_function,
 #'          args = list(x = 10,z = FALSE, b = FALSE),
-#'          eval.point = "negative <- " )
+#'          eval_point = "negative <- " )
 #'
-
-
-
-partial <- function( fun,
-                     args,
-                     eval.point = NULL,
-                     full.scope = FALSE,
-                     fix.pattern = FALSE )
+partial <- function(fun,
+                    args,
+                    eval_point = NULL,
+                    full_scope = FALSE,
+                    fix_pattern = FALSE)
 {
-  if(missing(args)){
-    fill_args <- gsub(x = head(fun)[[1]], pattern = "function|\\(|\\)", replacement = "")
-    fill_args <- strsplit( fill_args, split = ",")
+  if (missing(args)) {
+    fill_args <-
+      gsub(x = head(fun)[[1]],
+           pattern = "function|\\(|\\)",
+           replacement = "")
+    fill_args <- strsplit(fill_args, split = ",")
 
     args <- list(fill_args)
   }
-  if(is.null(eval.point))
+  if (is.null(eval_point))
   {
     stop("Please supply an evaluation point for me to return.")
   }
-  if(is.numeric(eval.point) && eval.point != 0)
+  if (is.numeric(eval_point) && eval_point != 0)
   {
     # use the line in the body of the function as the evaluation point
-    if( eval.point < 0){
+    if (eval_point < 0) {
       stop("Not a valid evaluation point, stopping. Please supply a positive integer.")
     }
-    new_return <- eval.point
+    new_return <- eval_point
 
   }
-  else if(is.character(eval.point))
+  else if (is.character(eval_point))
   {
     # fix the brackets (which would normally fail due to regex matching)
-    eval.point <- gsub(pattern = "\\(", replacement = "\\\\(", x = eval.point)
-    eval.point <- gsub(pattern = "\\)", replacement = "\\\\)", x = eval.point)
+    eval_point <-
+      gsub(pattern = "\\(",
+           replacement = "\\\\(",
+           x = eval_point)
+    eval_point <-
+      gsub(pattern = "\\)",
+           replacement = "\\\\)",
+           x = eval_point)
 
     # defined as a character string inside the body of the function
-    new_return <- as.numeric(grep( pattern = eval.point,
-                                   x = as.character(body(fun)),
-                                   fixed = fix.pattern))
-    if(length(new_return) == 0){
+    new_return <- as.numeric(grep(
+      pattern = eval_point,
+      x = as.character(body(fun)),
+      fixed = fix_pattern
+    ))
+    if (length(new_return) == 0) {
       stop("Not a valid evaluation point, stopping.")
     }
-    if(length(new_return) > 1){
+    if (length(new_return) > 1) {
       stop("Multiple evaluation matches - please select an unambiguous one.")
     }
-
-
   }
   else
   {
-    stop("Please supply a valid evaluation point -
+    stop(
+      "Please supply a valid evaluation point -
          a number indicating the line in the body of the function,
          or a string which can be parsed and matched against the
-         body of the function.")
+         body of the function."
+    )
   }
 
-  if(full.scope){
-
-    body(fun)[[new_return]] <- substitute( return(as.list(environment())))
+  if (full_scope) {
+    body(fun)[[new_return]] <-
+      substitute(return(as.list(environment())))
     fun_abbr <- fun
 
     result <- do.call(fun_abbr, args)
   }
   else{
     last_obj <- as.character(body(fun)[[new_return]])[2]
-    body(fun)[[new_return+1]] <- substitute( return(eval(parse(text = last_obj))))
+    body(fun)[[new_return + 1]] <-
+      substitute(return(eval(parse(text = last_obj))))
 
     fun_abbr <- fun
     result <- do.call(fun_abbr, args)
@@ -122,7 +131,3 @@ partial <- function( fun,
 
   return(result)
 }
-
-
-
-

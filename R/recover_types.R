@@ -36,54 +36,39 @@
 #'  recover_types(fun = dummy_fun)
 #'  # and it will try to be helpful, though it is recommended to specify args where possible
 #'
-
-
-
-
-
-
-recover_types <- function( fun, args ){
-    if(is.character(fun))
-      {
-        fun <- eval(as.name(fun))
-      }
-    if(missing(args)){
-      fill_args <- gsub(x = head(fun)[[1]], pattern = "function|\\(|\\)", replacement = "")
-      fill_args <- strsplit( fill_args, split = ",")
-
-      split_names_values <- lapply(fill_args, function(i){
-        strsplit(i, split = "=", fixed = TRUE)
-      })
-      RHS <- lapply(split_names_values[[1]], function(i){
-        eval(parse(text = i[[2]]))
-      })
-
-      args <- RHS
-    }
-    # get the line on which it fails
-# return(args)
-res <- as.numeric(
-tryCatch(
-  for (i in 1:length(body(fun)))
+recover_types <- function(fun, args) {
+  if (is.character(fun))
+  {
+    fun <- eval(as.name(fun))
+  }
+  if (missing(args)) {
+    args <- find_args(fun)
+  }
+  # get the line on which it fails
+  # return(args)
+  res <- as.numeric(tryCatch(
+    for (i in 1:length(body(fun)))
     {
-      partial( fun, args, eval.point = i)
+      partial(fun, args, eval_point = i)
       iter_death <- i
     },
-      error = function(e){ return(iter_death+1)}
-    ))
+    error = function(e) {
+      return(iter_death + 1)
+    }
+  ))
 
-  if(length(res) == 0){
+  if (length(res) == 0) {
     result <- "The function ran succesfully!"
     cat(result)
     return(0)
   }
 
-
-    get_objects <- partial(fun, args, eval.point = res, full.scope = TRUE)
-    classes_get <- lapply(get_objects, FUN = class)
-    names(classes_get) <- names(get_objects)
-    result <- list(body(fun)[[res]], classes_get)
-    names(result) <- c("Failing line", "Types")
+  get_objects <-
+    partial(fun, args, eval_point = res, full_scope = TRUE)
+  classes_get <- lapply(get_objects, FUN = class)
+  names(classes_get) <- names(get_objects)
+  result <- list(body(fun)[[res]], classes_get)
+  names(result) <- c("Failing line", "Types")
 
   return(result)
 }
