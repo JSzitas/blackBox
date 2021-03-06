@@ -2,27 +2,26 @@
 % Please edit documentation in R/partial.R
 \name{partial}
 \alias{partial}
-\title{Partially evaluation of a function}
+\title{Partial evaluation of a function}
 \usage{
-partial(fun, args, eval.point = NULL, full.scope = FALSE,
-  fix.pattern = FALSE)
+partial(fun, args, eval_point = NULL, full_scope = FALSE, fix_pattern = FALSE)
 }
 \arguments{
 \item{fun}{A function to partially evaluate.}
 
 \item{args}{A list of the arguments necessary for the function to execute. See details.}
 
-\item{eval.point}{The function line from which to return the result. A line number in the
+\item{eval_point}{The function line from which to return the result. A line number in the
 body of the function, or a character string quoting a part of the function. See details.}
 
-\item{full.scope}{Whether to return everything that was in scope at the partial evaluation
+\item{full_scope}{Whether to return everything that was in scope at the partial evaluation
 point, defaults to **FALSE**.}
 
-\item{fix.pattern}{Whether to used **fixed** for regex matching, defaults to **FALSE**.}
+\item{fix_pattern}{Whether to used **fixed** for regex matching on **eval_point**, defaults to **FALSE**.}
 }
 \value{
 A result of partial evaluations - the full environment containing every object
-in scope at that evaluation if **full.scope** is **TRUE**, the last **call** otherwise.
+in scope at that evaluation if **full_scope** is **TRUE**, the last **call** otherwise.
 }
 \description{
 Partially evaluates a function, returning only the objects which exist
@@ -31,7 +30,7 @@ Partially evaluates a function, returning only the objects which exist
 \details{
 Parameter **args** can be safely ignored for
 functions which take no arguments explicitly, or for functions that have all their arguments
-set. **eval.point** stands for the line in the function body to be replaced with a return -
+set. **eval_point** stands for the line in the function body to be replaced with a return -
 this line is temporarily overwritten so a return can be made from it. See examples for usage.
 }
 \note{
@@ -54,18 +53,18 @@ return(y)
 # works with function body line number
 partial( fun = dummy_function,
          args = list(x = 10,z = FALSE, b = FALSE),
-         eval.point = 1 )
+         eval_point = 1 )
 partial( fun = dummy_function,
          args = list(x = 10,z = FALSE, b = FALSE),
-         eval.point = 3 )
+         eval_point = 3 )
 
 # works with partial string matching
 partial( fun = dummy_function,
          args = list(x = 10,z = FALSE, b = FALSE),
-         eval.point = "negat" )
+         eval_point = "negat" )
 # and semi-full string matching
 partial( fun = dummy_function,
          args = list(x = 10,z = FALSE, b = FALSE),
-         eval.point = "negative <- " )
+         eval_point = "negative <- " )
 
 }

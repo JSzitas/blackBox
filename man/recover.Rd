@@ -4,7 +4,7 @@
 \alias{recover}
 \title{Recover the scope of a function that dies.}
 \usage{
-recover(fun, args, return.all = TRUE)
+recover(fun, args, return_all = TRUE)
 }
 \arguments{
 \item{fun}{A function to test. Please supply as either an unquoted name, or
@@ -12,13 +12,13 @@ as a character string.}
 
 \item{args}{A list of optional function arguments to evaluate the function with.}
 
-\item{return.all}{Whether to return all of the objects in the environment, or to only
+\item{return_all}{Whether to return all of the objects in the environment, or to only
 print the last function called (which failed).}
 }
 \value{
 A list with the line caused the function to crash, and optionally the list of all
 objects in scope when the crash happened. Alternatively print the failing line and return 1
- if **return.all** is set to **FALSE**. Return 0 if the function ran
+ if **return_all** is set to **FALSE**. Return 0 if the function ran
 succesfully (and print a message).
 }
 \description{
@@ -65,6 +65,5 @@ dummy_fun <- function( x = 2 )
  }
 
  recover(fun = dummy_fun)
-
 
 }

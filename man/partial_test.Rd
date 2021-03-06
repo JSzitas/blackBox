@@ -4,20 +4,19 @@
 \alias{partial_test}
 \title{Partial test of a function}
 \usage{
-partial_test(fun, args, eval.point, compare.fun = NULL,
-  compare.object = NULL)
+partial_test(fun, args, eval_point, compare_fun = NULL, compare_object = NULL)
 }
 \arguments{
 \item{fun}{A function to partially evaluate.}
 
 \item{args}{A list of the arguments necessary for the function to execute. See details.}
 
-\item{eval.point}{The function line from which to return the result. A line number in the
+\item{eval_point}{The function line from which to return the result. A line number in the
 body of the function, or a character string quoting a part of the function. See details.}
 
-\item{compare.fun}{A predicate function to compare to, defaults to NULL.}
+\item{compare_fun}{A predicate function to compare to, defaults to NULL.}
 
-\item{compare.object}{An object to compare to, defaults to NULL.}
+\item{compare_object}{An object to compare to, defaults to NULL.}
 }
 \description{
 Partially evaluates a function, returning only the objects which exist
@@ -26,7 +25,7 @@ Partially evaluates a function, returning only the objects which exist
 \details{
 Parameter **args** can be safely ignored for
 functions which take no arguments explicitly, or for functions that have all their arguments
-set. **eval.point** stands for the line in the function body to be replaced with a return -
+set. **eval_point** stands for the line in the function body to be replaced with a return -
 this line is temporarily overwritten so a return can be made from it.
 The object to return is then compared, either using any form of predicate function,
 or using an object to compare to.
@@ -53,25 +52,25 @@ dummy_function <- function( x,     y = 2,    z,
 # works with function body line number
 partial_test( fun = dummy_function,
               args = list(x = 10,z = FALSE, b = FALSE),
-              eval.point = 1,
-              compare.obj =  NA)
+              eval_point = 1,
+              compare_object =  NA)
 
 partial_test( fun = dummy_function,
               args = list(x = 10,z = FALSE, b = FALSE),
-              eval.point = 3,
-              compare.object = FALSE)
+              eval_point = 3,
+              compare_object = FALSE)
 
 
 # works with partial string matching
 partial_test( fun = dummy_function,
               args = list(x = 10,z = FALSE, b = FALSE),
-              eval.point = "negat",
-              compare.object = TRUE )
+              eval_point = "negat",
+              compare_object = TRUE )
 
 # and semi-full string matching
 partial_test( fun = dummy_function,
               args = list(x = 10,z = FALSE, b = FALSE),
-              eval.point = "negative <- ",
-              compare.object = TRUE )
+              eval_point = "negative <- ",
+              compare_object = TRUE )
 
 }
