@@ -19,10 +19,9 @@ test_that("Test that running a function for partial returns works", {
 
     test_no_args <- partial(dummy_fun, eval_point = 2,
                             full_scope = TRUE)
+    expect_equal(test_no_args$x, test_res$x)
     expect_equal(test_no_args$y, test_res$y)
     expect_equal(test_no_args$z, test_res$z)
-    expect_equal(test_no_args$x, list(c(" x = 2", " y = \"death\"", " z = 5 ")))
-
 
     test_res <- partial(dummy_fun, args = list(x = 2, y = "death", z = 5),
                         eval_point = "x <- x + 5",
