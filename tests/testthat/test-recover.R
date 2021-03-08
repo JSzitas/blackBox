@@ -12,7 +12,7 @@ test_that("Recovering from a function works", {
 
   expect_equal(names(test_res), c("Failing line", "Objects in scope"))
   # It correctly fails here due to addition of "death" + 5 resulting in an error
-  expect_equal(as.character(test_res$'Failing line'), c("<-", "x", "y + 5"))
+  expect_equal(as.character(test_res$'Failing line'),  "x <- y + 5")
   # This gets updated - correctly
   expect_equal(test_res$`Objects in scope`$x, 7)
   expect_equal(test_res$`Objects in scope`$y, "death")
@@ -77,9 +77,7 @@ test_that( "This works even in parallel",{
 
   # returns the wrong line, ie
   expect_equal(as.character(test_res$'Failing line'),
-               c( "<-",
-                  "res",
-        "foreach(i = 1:length.out) %dopar% {\n    weirdness <- magical(x, y, z)\n}"))
+               "res <- foreach(i = 1:length.out) %dopar% {\n    weirdness <- magical(x, y, z)\n}")
   expect_equal(test_res$'Objects in scope'$x, 5)
   expect_equal(test_res$'Objects in scope'$y, "fly")
   expect_equal(test_res$'Objects in scope'$z , 2)
@@ -109,7 +107,7 @@ test_that("Recovering from a conditional inside a function works", {
 
   expect_equal(names(test_res), c("Failing line", "Objects in scope"))
   # It correctly fails here due to addition of "death" + 5 resulting in an error
-  expect_equal(as.character(test_res$'Failing line'), c("<-", "x", "y + 5"))
+  expect_equal(as.character(test_res$'Failing line'), "x <- y + 5")
   # This gets updated - correctly
   expect_equal(test_res$`Objects in scope`$x, 7)
   expect_equal(test_res$`Objects in scope`$y, "death")
