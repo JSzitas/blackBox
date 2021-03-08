@@ -44,31 +44,22 @@ recover_types <- function(fun, args) {
   if (missing(args)) {
     args <- find_args(fun)
   }
-  # get the line on which it fails
-  # return(args)
-  res <- as.numeric(tryCatch(
-    for (i in 1:length(body(fun)))
-    {
-      partial(fun, args, eval_point = i)
-      iter_death <- i
-    },
-    error = function(e) {
-      return(iter_death + 1)
-    }
-  ))
 
-  if (length(res) == 0) {
-    result <- "The function ran succesfully!"
-    cat(result)
-    return(0)
+  # get the line on which it fails
+  res <- run_iterativelly(fun, args)
+  # if we have no result, we return a happy, cheerful message
+  if ( res[["succesful"]] ) {
+    return("The function ran succesfully!")
   }
+  result <- list("Failing line" =  res[["last_line"]] )
+  res_line_num <- res[["last_line_number"]]
 
   get_objects <-
-    partial(fun, args, eval_point = res, full_scope = TRUE)
+    partial(fun, args, eval_point = res_line_num-1, full_scope = TRUE)
   classes_get <- lapply(get_objects, FUN = class)
   names(classes_get) <- names(get_objects)
-  result <- list(body(fun)[[res]], classes_get)
-  names(result) <- c("Failing line", "Types")
+  result <- c( result, list(classes_get))
+  names(result)[2] <- "Types"
 
   return(result)
 }

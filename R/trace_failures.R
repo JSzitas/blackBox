@@ -21,40 +21,31 @@ trace_failures <- function(fun, args, drop_unchanged_args = FALSE)
   if (missing(args)) {
     args <- find_args(fun)
   }
-  # get the line on which it fails
-  res <- as.numeric(tryCatch(
-    for (i in 1:length(body(fun)))
-    {
-      partial(fun, args, eval_point = i)
-      iter_death <- i
-    },
-    error = function(e) {
-      return(iter_death + 1)
-    }
-  ))
-
-  if (length(res) == 0) {
+  res <- run_iterativelly(fun, args)
+  # if we have no result, we return a happy, cheerful message
+  if ( res[["succesful"]] ) {
     return("The function ran succesfully!")
   }
+  res_line <- res[["last_line_number"]]-1
 
-  if (substr(body(fun)[[res]], start = 1, stop = 10)[1] == "if") {
-    helper_fun <- as.function(list(body(fun)[[res]][3]))
+  if ( grepl(x = res[["last_line"]], pattern = "if")) {
+      helper_fun <- as.function(list(body(fun)[[res_line]][3]))
 
-    get_args <- partial(fun, args, eval_point = res,
-                        full_scope = TRUE)
+      get_args <- partial(fun, args, eval_point = res_line,
+                          full_scope = TRUE)
 
-    formals(helper_fun) <- get_args
+      formals(helper_fun) <- get_args
 
-    where_fix_brackets <- length(head(helper_fun))
-    to_fix <- head(helper_fun)
-    to_fix[where_fix_brackets] <- "}"
+      where_fix_brackets <- length(head(helper_fun))
+      to_fix <- head(helper_fun)
+      to_fix[where_fix_brackets] <- "}"
 
-    helper_fun <- eval(parse(text = to_fix))
+      helper_fun <- eval(parse(text = to_fix))
 
-    body_of_call <- body(helper_fun)[[2]][[3]]
+      body_of_call <- body(helper_fun)[[2]][[3]]
   }
   else{
-    body_of_call <- body(fun)[[res]][[3]]
+    body_of_call <- body(fun)[[res_line]][[3]]
   }
 
   split_body <- unlist(strsplit(split = "\\s|[:punct:]",
@@ -86,7 +77,7 @@ trace_failures <- function(fun, args, drop_unchanged_args = FALSE)
     FUN = function(j) {
       # recall that res is where the function dies - we want the changes before that
       unlist(lapply(
-        1:(res - 1),
+        1:(res_line-1),
         FUN = function(i) {
           current_line <- body(fun)[[i]]
           # skip first line if it is formatted correctly - ie no one is writing oneliners
@@ -105,7 +96,7 @@ trace_failures <- function(fun, args, drop_unchanged_args = FALSE)
     unique_identifiers,
     FUN = function(j) {
       unlist(lapply(
-        1:(res - 1),
+        1:(res_line-1),
         FUN = function(i) {
           current_line <- body(fun)[[i]]
           if (current_line == "{") {
