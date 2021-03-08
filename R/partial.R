@@ -56,15 +56,11 @@ partial <- function(fun,
                     full_scope = FALSE,
                     fix_pattern = FALSE)
 {
-  if (missing(args)) {
-    fill_args <-
-      gsub(x = head(fun)[[1]],
-           pattern = "function|\\(|\\)",
-           replacement = "")
-    fill_args <- strsplit(fill_args, split = ",")
+  fun <- char_to_fun( fun )
+  if (missing(args)) args <- find_args(fun)
+  # if only a list was supplied, fill in the argument names
+  args <- fix_argnames(fun, args)
 
-    args <- list(fill_args)
-  }
   if (is.null(eval_point))
   {
     stop("Please supply an evaluation point for me to return.")

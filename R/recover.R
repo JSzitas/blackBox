@@ -58,15 +58,12 @@ recover <- function(fun,
                     args,
                     return_all = TRUE)
 {
-  # if character, convert to a name and look it up
-  if (is.character(fun))
-  {
-    fun <- eval(as.name(fun))
-  }
+  fun <- char_to_fun( fun )
   # if args were not specified, fetch them manually
-  if (missing(args)) {
-    args <- find_args(fun)
-  }
+  if (missing(args)) args <- find_args(fun)
+  # if only a list was supplied, fill in the argument names
+  args <- fix_argnames(fun, args)
+
   res <- run_iterativelly(fun, args)
   # if we have no result, we return a happy, cheerful message
   if ( res[["succesful"]] ) {

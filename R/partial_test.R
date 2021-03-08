@@ -3,8 +3,9 @@
 #' @description Partially evaluates a function, returning only the objects which exist
 #'  after the last line of partial evaluation and compares them to expected output
 #'
-#' @param fun A function to partially evaluate.
-#' @param args A list of the arguments necessary for the function to execute. See details.
+#' @param fun A function to partially evaluate (either the function object, or a string).
+#' @param args A list of the arguments necessary for the function to execute, or nothing.
+#' If nothing default parameter values must be specified in the function signature.
 #' @param eval_point The function line from which to return the result. A line number in the
 #' body of the function, or a character string quoting a part of the function. See details.
 #' @param compare_fun A predicate function to compare to, defaults to NULL.
@@ -68,6 +69,11 @@ partial_test <- function(fun,
   if (is.null(compare_fun) && is.null(compare_object)) {
     stop("Please supply a predicate function, or an object to compare to.")
   }
+  fun <- char_to_fun( fun )
+
+  if (missing(args)) args <- find_args(fun)
+  args <- fix_argnames(fun, args)
+
   result <- partial(fun, args, eval_point, full_scope = FALSE)
 
   if (!is.null(compare_fun) && is.null(compare_object)) {

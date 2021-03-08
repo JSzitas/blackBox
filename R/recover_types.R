@@ -37,13 +37,11 @@
 #'  # and it will try to be helpful, though it is recommended to specify args where possible
 #'
 recover_types <- function(fun, args) {
-  if (is.character(fun))
-  {
-    fun <- eval(as.name(fun))
-  }
-  if (missing(args)) {
-    args <- find_args(fun)
-  }
+  fun <- char_to_fun( fun )
+
+  if (missing(args)) args <- find_args(fun)
+  # if only a list was supplied, fill in the argument names
+  args <- fix_argnames(fun, args)
 
   # get the line on which it fails
   res <- run_iterativelly(fun, args)

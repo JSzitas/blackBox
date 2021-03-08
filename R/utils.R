@@ -31,22 +31,6 @@ find_args <- function( fun )
   return(args)
 }
 
-# dummy_fun <- function(x = 2,
-#                       y = "this_crashes",
-#                       z = 2)
-# {
-#   # these will run
-#   x = x + 2
-#   z = x + 3
-#   if( TRUE )
-#   {
-#     x <- x+1
-#   }
-#   # this will crash due to y being type character
-#   x = y + z
-#   return(x)
-# }
-
 run_iterativelly <- function( fun, args  )
 {
   # create environment with
