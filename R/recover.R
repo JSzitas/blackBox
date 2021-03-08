@@ -67,32 +67,26 @@ recover <- function(fun,
   if (missing(args)) {
     args <- find_args(fun)
   }
-  # get the line on which it fails
-  res <- as.numeric(tryCatch(
-    for (i in 1:length(body(fun)))
-    {
-      # this is somewhat inefficient -
-      # we could probably just slowly step through the function
-      partial(fun, args, eval_point = i)
-      iter_death <- i
-    },
-    # on error, mark the line where we failed
-    error = function(e) {
-      return(iter_death + 1)
-    }
-  ))
+  res <- run_iterativelly(fun, args)
   # if we have no result, we return a happy, cheerful message
-  if (length(res) == 0) {
+  if ( res[["succesful"]] ) {
     return("The function ran succesfully!")
   }
-  # if we have to step inside a nasty condition, this helps us recover from
-  # inside that condition, rather than just return the whole condition block
-  if (substr(body(fun)[[res]], start = 1, stop = 10)[1] == "if") {
+  result <- list("Failing line" =  res[["last_line"]] )
+
+  if ( grepl(x = res[["last_line"]], pattern = "if")) {
     # we do have to rewrite the function a bit, though
     # so we create a helper function
-    helper_fun <- as.function(list(body(fun)[[res]][3]))
+    helper_fun <- function(){}
+    body(helper_fun) <-
+      parse(text = gsub(
+        pattern = "if\\s+\\(.+\\)",
+        replacement = "",
+        x =  res[["last_line"]]
+      ))
+
     # we get the arguments of the helper function via a call to partial
-    get_args <- partial(fun, args, eval_point = res,
+    get_args <- partial(fun, args, eval_point = res[["last_line_number"]]-1,
                         full_scope = TRUE)
     # and set those as the formals
     formals(helper_fun) <- get_args
@@ -106,19 +100,14 @@ recover <- function(fun,
     return(recover(helper_fun, return_all = return_all))
   }
 
-  result <- list("Failing line" =  body(fun)[[res]] )
-
   if (return_all == TRUE)
   {
     # if we are returning everything, not just the failing line, we
-    # make one more call to partial (which is probably inefficient)
-    result <- c(result, list( partial(fun, args, eval_point = res,
-                                      full_scope = TRUE))
-                )
+    # return also a list of all of the available objects
+    result <- c(result, list(res[["objects_in_scope"]]) )
     names(result)[2] <- c("Objects in scope")
   }
   # otherwise just return the offending line
-
 
   return(result)
 }
