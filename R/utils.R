@@ -5,7 +5,7 @@ find_args <- function( fun )
   return(as.list(formals(fun)))
 }
 
-run_iterativelly <- function( fun, args  )
+run_iterativelly <- function(fun, args)
 {
   # create environment with
   custom_env <- new.env()
@@ -24,9 +24,9 @@ run_iterativelly <- function( fun, args  )
   fun_body <- gsub(pattern = " ",
                    replacement = "",
                    x = fun_body[2:length(fun_body)])
-  if( grepl( x = fun_body[length(fun_body)], pattern = "return\\(.*"))
+  if (grepl(x = fun_body[length(fun_body)], pattern = "return\\(.*"))
   {
-    fun_body <- fun_body[1:(length(fun_body)-1)]
+    fun_body <- fun_body[1:(length(fun_body) - 1)]
   }
   fun_body <-
     fun_body[grep(pattern = "^$",
@@ -49,13 +49,15 @@ run_iterativelly <- function( fun, args  )
   })
   # I will admit this comparison is a bit confusing- comparing a number to
   # TRUE yiels FALSE, so if res is TRUE, we succeeded, otherwise we failed
-  success <- ifelse(res == TRUE, TRUE, FALSE )
-  last_line <- ifelse( res == TRUE, length(body(fun)), res   )
+  success <- ifelse(res == TRUE, TRUE, FALSE)
+  last_line <- ifelse(res == TRUE, length(body(fun)), res)
 
-  return(list(
-    "succesful" = success,
-    "last_line" = as.character(body(fun))[last_line],
-    "last_line_number" = ifelse( res == TRUE, res, length(body(fun))),
-    "objects_in_scope" = as.list.environment(custom_env)
-  ))
+  return(
+    list(
+      "succesful" = success,
+      "last_line" = as.character(body(fun))[last_line],
+      "last_line_number" = ifelse(res == TRUE, res, length(body(fun))),
+      "objects_in_scope" = as.list.environment(custom_env)
+    )
+  )
 }

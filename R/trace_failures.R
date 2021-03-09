@@ -5,12 +5,12 @@
 #' @param fun The function to trace.
 #' @param args An optional list of argument names to trace - by default, all arguments
 #' are traced throughout the function.
-#' @param drop_unchanged_args Whether arguments that stay constant should change,
+#' @param drop_unchanged_args Whether arguments that stay constant should be returned.
 #' defaults to **FALSE**.
-#' @return A list of all the objects that were changed, including the line
-#' numbers denoting the lines where the changes happened, or a full trace of all
-#' of the changes to arguments throughout the function (if drop_unchanged_args is
-#' set to **TRUE**).
+#' @return A list of all the objects that existed within the function environment,
+#' including the line numbers denoting the lines where the changes happened,
+#' or a full trace of all of the changes to arguments throughout the function
+#' (if drop_unchanged_args is set to **TRUE**).
 #' @export
 trace_failures <- function(fun, args, drop_unchanged_args = FALSE)
 {
