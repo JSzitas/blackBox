@@ -17,8 +17,8 @@ print the last function called (which failed).}
 }
 \value{
 A list with the line caused the function to crash, and optionally the list of all
-objects in scope when the crash happened. Alternatively print the failing line and return 1
- if **return_all** is set to **FALSE**. Return 0 if the function ran
+objects in scope when the crash happened. Alternatively return the failing line
+if **return_all** is set to **FALSE**. Return a success message if the function ran successfully.
 succesfully (and print a message).
 }
 \description{
@@ -28,7 +28,7 @@ Allows error recovery with specific lines and functions.
 This function exists due to difficulties in dealing with composed functions.
 A composed function routinely returns an error message without listing the function
 within that caused the error, leading to uninformative error messages. Rather
-than try to rewrite everything that already exists (and works rather well), this
+than try to rewrite everything that already exists (and potentially works), this
 function allows you to evaluate everything that happened until the function crashed
 and recover all of the objects in the environment when it crashed. You can thus reconstruct
 the whole scenario and find the error message faster.

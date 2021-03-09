@@ -7,9 +7,10 @@
 partial_test(fun, args, eval_point, compare_fun = NULL, compare_object = NULL)
 }
 \arguments{
-\item{fun}{A function to partially evaluate.}
+\item{fun}{A function to partially evaluate (either the function object, or a string).}
 
-\item{args}{A list of the arguments necessary for the function to execute. See details.}
+\item{args}{A list of the arguments necessary for the function to execute, or nothing.
+If nothing default parameter values must be specified in the function signature.}
 
 \item{eval_point}{The function line from which to return the result. A line number in the
 body of the function, or a character string quoting a part of the function. See details.}

@@ -12,14 +12,14 @@ trace_failures(fun, args, drop_unchanged_args = FALSE)
 \item{args}{An optional list of argument names to trace - by default, all arguments
 are traced throughout the function.}
 
-\item{drop_unchanged_args}{Whether arguments that stay constant should change,
+\item{drop_unchanged_args}{Whether arguments that stay constant should be returned.
 defaults to **FALSE**.}
 }
 \value{
-A list of all the objects that were changed, including the line
-numbers denoting the lines where the changes happened, or a full trace of all
-of the changes to arguments throughout the function (if drop_unchanged_args is
-set to **TRUE**).
+A list of all the objects that existed within the function environment,
+including the line numbers denoting the lines where the changes happened,
+or a full trace of all of the changes to arguments throughout the function
+(if drop_unchanged_args is set to **TRUE**).
 }
 \description{
 Trace back the manipulations of object inputs to a function

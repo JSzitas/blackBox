@@ -14,7 +14,7 @@ as a character string.}
 }
 \value{
 A list with the line caused the function to crash, and the list of types of
-objects in scope when the crash happened. Alternatively 0 if the function ran succesfully.
+objects in scope when the crash happened. Alternatively a success message if the function ran successfully.
 }
 \description{
 Allows error recovery with specific lines and functions.
@@ -45,6 +45,5 @@ less verbose and heavy version of recovery
  recover_types(fun = dummy_fun, args = list(x = 5))
  # this also works with arguments unspecified
  recover_types(fun = dummy_fun)
- # and it will try to be helpful, though it is recommended to specify args where possible
 
 }
