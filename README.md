@@ -35,7 +35,63 @@ coverage - you do not need these to make use of the package.
 
 ## Examples
 
-TBD(see documented examples within the package in the meantime).
+To start of, imagine we have a simple toy example. We are given the
+following function, which sometimes crashes:
+
+``` r
+some_function <- function( x = 2, y = 3, z = 2 )
+{
+  x <- x+y
+  y <- y-z 
+  z <- y+x+y
+  return(z)
+}
+```
+
+Now, this function seems readily simple. Now, if you supply the correct
+numeric arguments, the function will work. However, in absence of type
+checking, we can easily run into trouble. We might sometimes come across
+situations where things are not as they seem. Consider the following
+simple case:
+
+``` r
+
+what_am_i <- factor(c(1,2,3,4,5))
+# this looks like an integer, right? 
+what_am_i[5]
+#> [1] 5
+#> Levels: 1 2 3 4 5
+
+# so what happens when a user manages to call our function? 
+some_function( x = 2, y = 3, z = what_am_i[5])
+#> Warning in Ops.factor(y, z): '-' not meaningful for factors
+#> [1] NA
+# that seems a bit unclear
+```
+
+We get a message about factors… but we might not notice that we are
+passing in a factor. Indeed, typically this is entirely unintentional,
+and happens due to type coercion, somewhere within a different function.
+Sometimes this leads to errors, which is usually better.
+
+**recovery** to the rescue. Instead of writing your own return
+statements (or print statements) as is customary during debugging,
+**recovery** will allow you to do approach this problem in a manner more
+befitting a programmer - lazily\!
+
+**recovery** supports the following functions debugging functions:
+*recover - recover everything that lived inside a function environment
+when it crashed, and approximately the line **WHERE** it crashed. This
+still has trouble going inside certain scope blocks, but thanks to a
+return of the environment allows one to replicate the error, or
+repeatedly call recover. *trace\_failures \*recover\_types
+
+We further intend to eventually support nested recovery - if a function
+within a function failed, figuring out **why** this happened should just
+be another call to **recover**.
+
+Document further (**TODO**)( in the meantime see documented examples
+within the package).
 
 ## Installation
 
