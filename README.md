@@ -15,6 +15,8 @@ status](https://ci.appveyor.com/api/projects/status/github/JSzitas/recovery?bran
 coverage](https://codecov.io/gh/JSzitas/recovery/branch/master/graph/badge.svg)](https://codecov.io/gh/JSzitas/recovery?branch=master)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/recovery)](https://CRAN.R-project.org/package=recovery)
+[![R build
+status](https://github.com/JSzitas/recovery/workflows/R-CMD-check/badge.svg)](https://github.com/JSzitas/recovery/actions)
 <!-- badges: end -->
 
 ## About
