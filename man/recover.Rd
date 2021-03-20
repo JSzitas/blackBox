@@ -4,10 +4,11 @@
 \alias{recover}
 \title{Recover the scope of a function that dies.}
 \usage{
-recover(fun, args, return_all = TRUE)
+recover(obj, args, return_all = TRUE)
 }
 \arguments{
-\item{fun}{A function to test. Please supply as either an unquoted name, or
+\item{obj}{A function to test, or a result of previous call to recovery.
+For functions, please supply as either an unquoted name, or
 as a character string.}
 
 \item{args}{A list of optional function arguments to evaluate the function with.}
@@ -47,9 +48,9 @@ the whole scenario and find the error message faster.
  return(x)
  }
 
- recover(fun = dummy_fun, args = list(x = 5))
+ recover(obj = dummy_fun, args = list(x = 5))
  # this also works with arguments unspecified (but they must have set defaults)
- recover(fun = dummy_fun)
+ recover(obj = dummy_fun)
  # and it will try to be helpful, though it is recommended to specify args where possible
 
  # finally, recover can also return functions
@@ -64,6 +65,6 @@ dummy_fun <- function( x = 2 )
  return(x)
  }
 
- recover(fun = dummy_fun)
+ recover(obj = dummy_fun)
 
 }

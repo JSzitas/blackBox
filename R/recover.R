@@ -36,9 +36,9 @@
 #'  return(x)
 #'  }
 #'
-#'  recover(fun = dummy_fun, args = list(x = 5))
+#'  recover(obj = dummy_fun, args = list(x = 5))
 #'  # this also works with arguments unspecified (but they must have set defaults)
-#'  recover(fun = dummy_fun)
+#'  recover(obj = dummy_fun)
 #'  # and it will try to be helpful, though it is recommended to specify args where possible
 #'
 #'  # finally, recover can also return functions
@@ -53,7 +53,7 @@
 #'  return(x)
 #'  }
 #'
-#'  recover(fun = dummy_fun)
+#'  recover(obj = dummy_fun)
 #'
 recover <- function(obj,
                     args,
