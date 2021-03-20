@@ -2,7 +2,8 @@
 #'
 #' @description Allows error recovery with specific lines and functions.
 #'
-#' @param fun A function to test. Please supply as either an unquoted name, or
+#' @param obj A function to test, or a result of previous call to recovery.
+#' For functions, please supply as either an unquoted name, or
 #' as a character string.
 #' @param args A list of optional function arguments to evaluate the function with.
 #' @param return_all Whether to return all of the objects in the environment, or to only
@@ -54,21 +55,29 @@
 #'
 #'  recover(fun = dummy_fun)
 #'
-recover <- function(fun,
+recover <- function(obj,
                     args,
                     return_all = TRUE)
 {
-  fun <- char_to_fun( fun )
-  # if args were not specified, fetch them manually
-  if (missing(args)) args <- find_args(fun)
-  # if only a list was supplied, fill in the argument names
-  args <- fix_argnames(fun, args)
-
-  res <- run_iterativelly(fun, args)
-  # if we have no result, we return a happy, cheerful message
-  if ( res[["succesful"]] ) {
-    return("The function ran succesfully!")
+  if( class(obj) == "recovery_object" )
+  {
+    construct_expr <-
+      gsub(x = obj[["Failing line"]],
+           pattern = "\\}$|.*\\{+",
+           replacement = "")
+    return(list("Failing line" = construct_expr,
+                "Objects in scope" = obj[["Objects in scope"]]))
   }
+
+  obj <- char_to_fun( obj )
+  # if args were not specified, fetch them manually
+  if (missing(args)) args <- find_args(obj)
+  # if only a list was supplied, fill in the argument names
+  args <- fix_argnames(obj, args)
+
+  res <- run_iterativelly(obj, args)
+  # if we have no result, we return a happy, cheerful message
+  if ( res[["succesful"]] ) return("The function ran succesfully!")
   result <- list("Failing line" =  res[["last_line"]] )
 
   if ( grepl(x = res[["last_line"]], pattern = "if")) {
@@ -83,7 +92,7 @@ recover <- function(fun,
       ))
 
     # we get the arguments of the helper function via a call to partial
-    get_args <- partial(fun, args, eval_point = res[["last_line_number"]]-1,
+    get_args <- partial(obj, args, eval_point = res[["last_line_number"]]-1,
                         full_scope = TRUE)
     # and set those as the formals
     formals(helper_fun) <- get_args
