@@ -14,18 +14,13 @@
 #' @export
 trace_failures <- function(fun, args, drop_unchanged_args = FALSE)
 {
-  if (is.character(fun))
-  {
-    fun <- eval(as.name(fun))
-  }
-  if (missing(args)) {
-    args <- find_args(fun)
-  }
+  fun <- char_to_fun(fun)
+  if (missing(args)) args <- find_args(fun)
+
   res <- run_iterativelly(fun, args)
   # if we have no result, we return a happy, cheerful message
-  if ( res[["succesful"]] ) {
-    return("The function ran succesfully!")
-  }
+  if ( res[["succesful"]] ) return("The function ran succesfully!")
+
   res_line <- res[["last_line_number"]]-1
 
   if ( grepl(x = res[["last_line"]], pattern = "if")) {
@@ -121,6 +116,7 @@ trace_failures <- function(fun, args, drop_unchanged_args = FALSE)
       },
       result
     )
+
     line_numbers <-
       Filter(
         f = function(i) {
