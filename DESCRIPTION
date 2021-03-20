@@ -12,7 +12,7 @@ Description: Recover objects in scope inside a function when it fails. This is
     intended to replace debuggers where debuggers return cryptic messages, and 
     useless stack traces. Also supports partial tests - whether a function
     returns the correct object at a given point during execution. 
-License: GPL-3
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Suggests: 
