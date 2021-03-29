@@ -12,6 +12,7 @@
 #' or a full trace of all of the changes to arguments throughout the function
 #' (if drop_unchanged_args is set to **TRUE**).
 #' @export
+# TODO: this is a bit complicated - try to separate and simplify
 trace_failures <- function(fun, args, drop_unchanged_args = FALSE)
 {
   fun <- char_to_fun(fun)
@@ -21,7 +22,7 @@ trace_failures <- function(fun, args, drop_unchanged_args = FALSE)
   # if we have no result, we return a happy, cheerful message
   if ( res[["succesful"]] ) return("The function ran succesfully!")
 
-  res_line <- res[["last_line_number"]]-1
+  res_line <- res[["last_line_number"]]
 
   if ( grepl(x = res[["last_line"]], pattern = "if")) {
       helper_fun <- as.function(list(body(fun)[[res_line]][3]))
