@@ -36,27 +36,28 @@ run_iterativelly <- function(fun, args)
   # figure out how to handle conditionals - it probably makes sense to just
   # replace them as soon as they are known
   res <- tryCatch({
-    iter_death <- 1
-    for (i in fun_body)
+    # for lines in the function body
+    for (i in seq_len(length(fun_body)))
     {
-      eval(parse(text = i), envir = custom_env)
-      iter_death <- iter_death + 1
+      # parse and evaluate line
+      eval(parse(text = fun_body[i]), envir = custom_env)
     }
-    TRUE
-  },
-  error = function(e) {
-    return(iter_death + 1)
+    # if we get at the end, i is the last line, and the last line succeeded
+    list( last_line = i, success = TRUE)
+  },error = function(e){
+    # if we fail, we need to increment
+    return(list( last_line = i+1,
+                 success = FALSE))
   })
-  # I will admit this comparison is a bit confusing- comparing a number to
-  # TRUE yiels FALSE, so if res is TRUE, we succeeded, otherwise we failed
-  success <- ifelse(res == TRUE, TRUE, FALSE)
-  last_line <- ifelse(res == TRUE, length(body(fun)), res)
+
+  success <- res[["success"]]
+  last_line <- res[["last_line"]]
 
   return(
     list(
       "succesful" = success,
       "last_line" = as.character(body(fun))[last_line],
-      "last_line_number" = ifelse(res == TRUE, res, length(body(fun))),
+      "last_line_number" = last_line,
       "objects_in_scope" = as.list.environment(custom_env)
     )
   )
