@@ -1,7 +1,7 @@
 Package: recovery
 Type: Package
 Title: Recover From Failures and Perform Partial Tests
-Version: 1.1.2
+Version: 1.2.2
 Authors@R: 
     person(given = "Juraj",
            family = "Szitas",
